@@ -1,4 +1,4 @@
-package net.freudasoft;
+package dev.welbyseely;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;

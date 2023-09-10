@@ -1,8 +1,7 @@
-package net.freudasoft;
+package dev.welbyseely;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
@@ -37,7 +36,6 @@ public class CMakeBuildTask extends DefaultTask {
         buildTarget.set( ext.getBuildTarget() );
         buildClean.set( ext.getBuildClean() );
     }
-
 
     /// region getters
     @Input
@@ -92,7 +90,6 @@ public class CMakeBuildTask extends DefaultTask {
 
         return parameters;
     }
-
 
     @TaskAction
     public void build() {

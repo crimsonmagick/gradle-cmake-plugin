@@ -14,8 +14,8 @@ plugins {
     id 'maven-publish'
 }
 
-group = "net.freudasoft"
-version = "0.0.2"
+group = "dev.welbyseely"
+version = "0.0.3"
 
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -24,7 +24,6 @@ repositories {
 }
 
 dependencies {
-    compile gradleApi()
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
@@ -32,8 +31,8 @@ dependencies {
 gradlePlugin {
     plugins {
         cmakePlugin {
-            id = 'net.freudasoft.gradle-cmake-plugin'
-            implementationClass = 'net.freudasoft.CMakePlugin'
+            id = 'dev.welbyseely.gradle-cmake-plugin'
+            implementationClass = 'dev.welbyseely.CMakePlugin'
         }
     }
 }
@@ -41,8 +40,8 @@ gradlePlugin {
 // The configuration example below shows the minimum required properties
 // configured to publish your plugin to the plugin portal
 pluginBundle {
-    website = 'https://github.com/freudi74/gradle-cmake-plugin'
-    vcsUrl = 'https://github.com/freudi74/gradle-cmake-plugin'
+    website = 'https://github.com/crimsonmagick/gradle-cmake-plugin'
+    vcsUrl = 'https://github.com/crimsonmagick/gradle-cmake-plugin'
     description = 'Plugin to use Cmake from Gradle'
     tags = ['cmake', 'c++']
 

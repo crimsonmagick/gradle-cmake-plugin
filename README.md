@@ -14,7 +14,7 @@ If you have requests or find bugs, please create an issue.
 
 ```groovy
 plugins {
-  id 'net.freudasoft.gradle-cmake-plugin' version '0.0.2'
+  id 'dev.welbyseely.gradle-cmake-plugin' version '0.0.2'
 }
 ```
 
@@ -28,14 +28,14 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'net.freudasoft:gradle-cmake-plugin:0.0.2'
+    classpath 'dev.welbyseely:gradle-cmake-plugin:0.0.2'
   }
   repositories {
     mavenCentral()
   }
 }
 
-apply plugin: "net.freudasoft.gradle-cmake-plugin"
+apply plugin: "dev.welbyseely.gradle-cmake-plugin"
 ```
 
 and configure by:
@@ -122,13 +122,13 @@ If you want to get the output of cmake, add -i to your gradle call, for example:
 You can create custom tasks the following way:
 
 ```groovy
-task configureFoo(type: net.freudasoft.CMakeConfigureTask) {
+task configureFoo(type: dev.welbyseely.CMakeConfigureTask) {
   sourceFolder=file("$projectDir/src/main/cpp/foo")
   workingFolder=file("$buildDir/cmake/foo")
   // ... other parameters you need, see above, except the ones listed under cmakeBuild Parameters
 }
 
-task buildFoo(type: net.freudasoft.CMakeBuildTask) {
+task buildFoo(type: dev.welbyseely.CMakeBuildTask) {
   workingFolder=file("$buildDir/cmake/foo")
   // ... other parameters you need, see above, except the ones listed under cmakeConfigure parameters
 }
@@ -151,7 +151,7 @@ cmake {
   platform='x64'
 }
 
-task cmakeConfigureX86(type: net.freudasoft.CMakeConfigureTask) {
+task cmakeConfigureX86(type: dev.welbyseely.CMakeConfigureTask) {
   configureFromProject() // uses everything in the cmake { ... } section.
 
   // overwrite target platform
@@ -160,7 +160,7 @@ task cmakeConfigureX86(type: net.freudasoft.CMakeConfigureTask) {
   workingFolder=file("$buildDir/cmake_x86")
 }
 
-task cmakeBuildX86(type: net.freudasoft.CMakeBuildTask) {
+task cmakeBuildX86(type: dev.welbyseely.CMakeBuildTask) {
   configureFromProject() // uses everything in the cmake { ... } section.
   workingFolder=file("$buildDir/cmake_x86")
 }

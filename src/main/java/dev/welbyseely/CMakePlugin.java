@@ -1,5 +1,6 @@
 /**
  * Copyright 2019 Marco Freudenberger
+ * Copyright 2023 Welby Seely
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.freudasoft;
+package dev.welbyseely;
 
 import org.gradle.api.*;
 import org.gradle.api.logging.LogLevel;
@@ -117,7 +118,6 @@ public class CMakePlugin implements Plugin<Project> {
 
         TaskContainer tasks = project.getTasks();
         tasks.getByName("cmakeBuild").dependsOn(tasks.getByName("cmakeConfigure"));
-
 
     }
 

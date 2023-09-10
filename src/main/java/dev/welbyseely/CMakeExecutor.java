@@ -1,4 +1,4 @@
-package net.freudasoft;
+package dev.welbyseely;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.GradleScriptException;
@@ -64,7 +64,6 @@ public class CMakeExecutor {
             throw new GradleScriptException( "CMakeExecutor["+taskName+"].", e );
         }
     }
-
 
 }
 

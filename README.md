@@ -14,7 +14,7 @@ If you have requests or find bugs, please create an issue.
 
 ```groovy
 plugins {
-  id 'dev.welbyseely.gradle-cmake-plugin' version '0.0.2'
+  id 'dev.welbyseely.gradle-cmake-plugin' version '0.0.3'
 }
 ```
 
@@ -28,7 +28,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'dev.welbyseely:gradle-cmake-plugin:0.0.2'
+    classpath 'dev.welbyseely:gradle-cmake-plugin:0.0.3'
   }
   repositories {
     mavenCentral()

@@ -17,16 +17,18 @@
 
 package dev.welbyseely;
 
-import org.gradle.api.*;
-import org.gradle.api.logging.LogLevel;
-import org.gradle.api.provider.Property;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.TaskContainer;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.gradle.api.Action;
+import org.gradle.api.GradleException;
+import org.gradle.api.GradleScriptException;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
+import org.gradle.api.Task;
+import org.gradle.api.logging.LogLevel;
+import org.gradle.api.tasks.TaskContainer;
 
 public class CMakePlugin implements Plugin<Project> {
     private boolean deleteDirectory(File directoryToBeDeleted) {
@@ -41,6 +43,7 @@ public class CMakePlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
+        project.getPlugins().apply("base");
         CMakePluginExtension extension = project.getExtensions().create("cmake", CMakePluginExtension.class, project);
 
         /*
@@ -119,6 +122,15 @@ public class CMakePlugin implements Plugin<Project> {
         TaskContainer tasks = project.getTasks();
         tasks.getByName("cmakeBuild").dependsOn(tasks.getByName("cmakeConfigure"));
 
+        project.afterEvaluate(p -> {
+            p.getTasks().named("clean").configure(task -> {
+                task.dependsOn("cmakeClean");
+            });
+
+            p.getTasks().named("build").configure(task -> {
+                task.dependsOn("cmakeBuild");
+            });
+        });
     }
 
 }

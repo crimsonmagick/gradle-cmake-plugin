@@ -94,7 +94,7 @@ cmake {
 clean, configure and build:
 
 ```bash
-./gradlew cmakeClean cmakeConfigure cmakebBuild
+./gradlew cmakeClean cmakeConfigure cmakeBuild
 ```
 
 if you have assemble and clean tasks in your gradle project already you can also use:

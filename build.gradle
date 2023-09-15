@@ -1,16 +1,23 @@
 plugins {
     id "com.gradle.plugin-publish" version "1.1.0"
+    id "java"
 }
 
 group = "dev.welbyseely"
-version = "0.0.3"
+version = "0.0.4"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 gradlePlugin {

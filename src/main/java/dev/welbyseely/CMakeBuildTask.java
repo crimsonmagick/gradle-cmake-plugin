@@ -11,6 +11,9 @@ import org.gradle.api.tasks.TaskAction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Build a configured Build with CMake
+ */
 public class CMakeBuildTask extends DefaultTask {
     private final Property<String> executable;
     private final DirectoryProperty workingFolder;

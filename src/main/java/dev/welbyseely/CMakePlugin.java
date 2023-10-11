@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.gradle.api.Action;
 import org.gradle.api.GradleException;
 import org.gradle.api.GradleScriptException;
 import org.gradle.api.Plugin;
@@ -46,42 +45,32 @@ public class CMakePlugin implements Plugin<Project> {
         project.getPlugins().apply("base");
         CMakePluginExtension extension = project.getExtensions().create("cmake", CMakePluginExtension.class, project);
 
-        /*
-         * cmakeConfigureTask
-         */
-        project.getTasks().register("cmakeConfigure", CMakeConfigureTask.class, new Action<CMakeConfigureTask>() {
-            @Override
-            public void execute(CMakeConfigureTask task) {
-                task.getExecutable().set(extension.getExecutable());
-                task.getWorkingFolder().set(extension.getWorkingFolder());
-                task.getSourceFolder().set(extension.getSourceFolder());
-                task.getConfigurationTypes().set(extension.getConfigurationTypes());
-                task.getInstallPrefix().set(extension.getInstallPrefix());
-                task.getGenerator().set(extension.getGenerator());
-                task.getPlatform().set(extension.getPlatform());
-                task.getToolset().set(extension.getToolset());
-                task.getBuildSharedLibs().set(extension.getBuildSharedLibs());
-                task.getBuildStaticLibs().set(extension.getBuildStaticLibs());
-                task.getDef().set(extension.getDef());
-            }
+        project.getTasks().register("cmakeConfigure", CMakeConfigureTask.class, task -> {
+            task.getExecutable().set(extension.getExecutable());
+            task.getWorkingFolder().set(extension.getWorkingFolder());
+            task.getSourceFolder().set(extension.getSourceFolder());
+            task.getConfigurationTypes().set(extension.getConfigurationTypes());
+            task.getInstallPrefix().set(extension.getInstallPrefix());
+            task.getGenerator().set(extension.getGenerator());
+            task.getPlatform().set(extension.getPlatform());
+            task.getToolset().set(extension.getToolset());
+            task.getBuildSharedLibs().set(extension.getBuildSharedLibs());
+            task.getBuildStaticLibs().set(extension.getBuildStaticLibs());
+            task.getDef().set(extension.getDef());
         });
 
-        project.getTasks().register("cmakeBuild", CMakeBuildTask.class, new Action<CMakeBuildTask>() {
-            @Override
-            public void execute(CMakeBuildTask task) {
-                task.getExecutable().set(extension.getExecutable());
-                task.getWorkingFolder().set(extension.getWorkingFolder());
-                task.getBuildConfig().set(extension.getBuildConfig());
-                task.getBuildTarget().set(extension.getBuildTarget());
-                task.getBuildClean().set(extension.getBuildClean());
-            }
+        project.getTasks().register("cmakeBuild", CMakeBuildTask.class, task -> {
+            task.getExecutable().set(extension.getExecutable());
+            task.getWorkingFolder().set(extension.getWorkingFolder());
+            task.getBuildConfig().set(extension.getBuildConfig());
+            task.getBuildTarget().set(extension.getBuildTarget());
+            task.getBuildClean().set(extension.getBuildClean());
         });
 
         Task cmakeClean = project.task( "cmakeClean" ).doFirst(task -> {
-            // should go to clean...
             File workingFolder = extension.getWorkingFolder().getAsFile().get().getAbsoluteFile();
             if ( workingFolder.exists() ) {
-                project.getLogger().info("Deleting folder "+ workingFolder.toString());
+                project.getLogger().info("Deleting folder " + workingFolder);
                 if (!deleteDirectory(workingFolder))
                     throw new GradleException("Could not delete working folder " + workingFolder);
             }
@@ -89,13 +78,9 @@ public class CMakePlugin implements Plugin<Project> {
         cmakeClean.setGroup("cmake");
         cmakeClean.setDescription("Clean CMake configuration");
 
-
-
         Task cmakeGenerators = project.task( "cmakeGenerators" ).doFirst(task -> {
-            // should go to clean...
             ProcessBuilder pb = new ProcessBuilder(extension.getExecutable().getOrElse("cmake"), "--help");
             try {
-                // start
                 Process process = pb.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -109,10 +94,7 @@ public class CMakePlugin implements Plugin<Project> {
                 }
                 process.waitFor();
             }
-            catch ( IOException e ) {
-                throw new GradleScriptException( "cmake --help failed.", e );
-            }
-            catch ( InterruptedException e ) {
+            catch (IOException | InterruptedException e ) {
                 throw new GradleScriptException( "cmake --help failed.", e );
             }
         });
@@ -123,13 +105,9 @@ public class CMakePlugin implements Plugin<Project> {
         tasks.getByName("cmakeBuild").dependsOn(tasks.getByName("cmakeConfigure"));
 
         project.afterEvaluate(p -> {
-            p.getTasks().named("clean").configure(task -> {
-                task.dependsOn("cmakeClean");
-            });
+            p.getTasks().named("clean").configure(task -> task.dependsOn("cmakeClean"));
 
-            p.getTasks().named("build").configure(task -> {
-                task.dependsOn("cmakeBuild");
-            });
+            p.getTasks().named("build").configure(task -> task.dependsOn("cmakeBuild"));
         });
     }
 

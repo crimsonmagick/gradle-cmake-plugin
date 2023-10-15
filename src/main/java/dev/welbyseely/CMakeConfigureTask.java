@@ -56,7 +56,7 @@ public class CMakeConfigureTask extends DefaultTask {
         toolset.set( ext.getToolset() );
         buildSharedLibs.set( ext.getBuildSharedLibs() );
         buildStaticLibs.set( ext.getBuildStaticLibs() );
-        def.set( ext.getDef() );
+        def.set( ext.getDefs() );
     }
 
     /// region getters

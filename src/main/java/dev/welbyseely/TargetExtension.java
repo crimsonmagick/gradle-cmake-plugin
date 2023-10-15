@@ -14,15 +14,14 @@
 
 package dev.welbyseely;
 
-import groovy.lang.Closure;
+import java.io.File;
+import java.util.Map;
 import org.gradle.api.Project;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
 
-import java.io.File;
-
-public class CMakePluginExtension {
+public class TargetExtension {
 
   // parameters used by config and build step
   private final Property<String> executable;
@@ -33,22 +32,19 @@ public class CMakePluginExtension {
   private final Property<String> configurationTypes;
   private final Property<String> installPrefix;
   private final Property<String> generator; // for example: "Visual Studio 16 2019"
-
   private final Property<String> platform; // for example "x64" or "Win32" or "ARM" or "ARM64", supported on vs > 8.0
   private final Property<String> toolset; // for example "v142", supported on vs > 10.0
   private final Property<Boolean> buildSharedLibs;
   private final Property<Boolean> buildStaticLibs;
   private final MapProperty<String, String> defs;
-  private final MapProperty<String, String> def;
 
   // parameters used on build step
   private final Property<String> buildConfig;
   private final Property<String> buildTarget;
   private final Property<Boolean> buildClean;
-  private final TargetListExtension targets;
-  private final Project project;
+  private final String name;
 
-  public CMakePluginExtension(Project project) {
+  public TargetExtension(final Project project, final String name) {
     executable = project.getObjects().property(String.class);
     workingFolder = project.getObjects().directoryProperty();
     sourceFolder = project.getObjects().directoryProperty();
@@ -60,16 +56,10 @@ public class CMakePluginExtension {
     buildSharedLibs = project.getObjects().property(Boolean.class);
     buildStaticLibs = project.getObjects().property(Boolean.class);
     defs = project.getObjects().mapProperty(String.class, String.class);
-    def = project.getObjects().mapProperty(String.class, String.class); // for backwards compat
     buildConfig = project.getObjects().property(String.class);
     buildTarget = project.getObjects().property(String.class);
     buildClean = project.getObjects().property(Boolean.class);
-    this.targets = project.getObjects().newInstance(TargetListExtension.class, project);
-    // default values
-    workingFolder.set(new File(project.getBuildDir(), "cmake"));
-    sourceFolder.set(
-      new File(project.getBuildDir(), "src" + File.separator + "main" + File.separator + "cpp"));
-    this.project = project;
+    this.name = name;
   }
 
   public Property<String> getExecutable() {
@@ -112,9 +102,6 @@ public class CMakePluginExtension {
     return buildStaticLibs;
   }
 
-  public MapProperty<String, String> getDef() {
-    return def;
-  }
   public MapProperty<String, String> getDefs() {
     return defs;
   }
@@ -131,13 +118,72 @@ public class CMakePluginExtension {
     return buildClean;
   }
 
-  public TargetListExtension getTargets() {
-    return targets;
+  public String getName() {
+    return name;
   }
 
-  public TargetListExtension targets(Closure<?> closure) {
-    project.configure(targets, closure);
-    return targets;
+  public void setExecutable(String executable) {
+    this.executable.set(executable);
+  }
+
+  public void setWorkingFolder(File workingFolder) {
+    this.workingFolder.set(workingFolder);
+  }
+
+  public void setWorkingFolder(String workingFolder) {
+    this.workingFolder.set(new File(workingFolder));
+  }
+
+  public void setSourceFolder(File sourceFolder) {
+    this.sourceFolder.set(sourceFolder);
+  }
+
+  public void setSourceFolder(String sourceFolder) {
+    this.sourceFolder.set(new File(sourceFolder));
+  }
+
+  public void setConfigurationTypes(String configurationTypes) {
+    this.configurationTypes.set(configurationTypes);
+  }
+
+  public void setInstallPrefix(String installPrefix) {
+    this.installPrefix.set(installPrefix);
+  }
+
+  public void setGenerator(String generator) {
+    this.generator.set(generator);
+  }
+
+  public void setPlatform(String platform) {
+    this.platform.set(platform);
+  }
+
+  public void setToolset(String toolset) {
+    this.toolset.set(toolset);
+  }
+
+  public void setBuildSharedLibs(Boolean buildSharedLibs) {
+    this.buildSharedLibs.set(buildSharedLibs);
+  }
+
+  public void setBuildStaticLibs(Boolean buildStaticLibs) {
+    this.buildStaticLibs.set(buildStaticLibs);
+  }
+
+  public void setDefs(Map<String, String > defs) {
+    this.defs.set(defs);
+  }
+
+  public void setBuildConfig(String buildConfig) {
+    this.buildConfig.set(buildConfig);
+  }
+
+  public void setBuildTarget(String buildTarget) {
+    this.buildTarget.set(buildTarget);
+  }
+
+  public void setBuildClean(Boolean buildClean) {
+    this.buildClean.set(buildClean);
   }
 
 }

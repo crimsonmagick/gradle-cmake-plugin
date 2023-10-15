@@ -1,9 +1,6 @@
 # gradle-cmake-plugin
 This plugin allows to configure and build using CMake. 
 
-This plugin should work as documented, but is in an early development phase. 
-If you have requests or find bugs, please create an issue.
-
 ## Prerequisites
 
 * `CMake` installed on the system. Available [here](https://www.cmake.org "CMake Homepage").
@@ -14,7 +11,7 @@ If you have requests or find bugs, please create an issue.
 
 ```groovy
 plugins {
-  id 'dev.welbyseely.gradle-cmake-plugin' version '0.0.3'
+  id 'dev.welbyseely.gradle-cmake-plugin' version '0.1.0'
 }
 ```
 
@@ -28,10 +25,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'dev.welbyseely:gradle-cmake-plugin:0.0.3'
-  }
-  repositories {
-    mavenCentral()
+    classpath 'dev.welbyseely:gradle-cmake-plugin:0.1.0'
   }
 }
 
@@ -65,7 +59,7 @@ cmake {
   // optionally set to build shared libs
   buildSharedLibs=true
   // define arbitrary CMake parameters. The below adds -Dtest=hello to cmake command line.
-  def.test='hello'
+  defs.test='hello'
 
   ////////////////////
   // cmakeBuild parameters
@@ -135,10 +129,39 @@ task buildFoo(type: dev.welbyseely.CMakeBuildTask) {
 
 buildFoo.dependsOn configureFoo // optional --- make sure its configured when you run the build task
 ```
+### Multiple targets (cross-compilation)
+If you need to configure for multiple targets you can use the `targets` property:
+
+```groovy
+cmake {
+  sourceFolder = "$projectDir/src"
+  buildSharedLibs = true
+  buildClean = true
+  buildConfig = 'Release'
+  targets {
+    windows {
+      final os = OperatingSystem.WINDOWS
+      workingFolder = new File(project.getBuildDir(), "cmake" + File.separator + os.nativePrefix)
+      platform='x64'
+    }
+    linux {
+      final os = OperatingSystem.LINUX
+      workingFolder = new File(project.getBuildDir(), "cmake" + File.separator + os.nativePrefix)
+      platform = 'x64'
+    }
+    mac {
+      final os = OperatingSystem.MAC_OS
+      workingFolder = new File(project.getBuildDir(), "cmake" + File.separator + os.nativePrefix)
+      platform = 'arm64'
+    }
+  }
+}
+
+```
 
 ### Custom tasks using main configuration
 
-You can also "import" the settings you've made in the main configuration "cmake" using the 'configureFromProject()' call:
+As an alternative to using `targets` you can "import" the settings you've made in the main configuration "cmake" using the 'configureFromProject()' call:
 
 ```groovy
 cmake {
@@ -168,9 +191,19 @@ task cmakeBuildX86(type: dev.welbyseely.CMakeBuildTask) {
 cmakeBuildX86.dependsOn cmakeConfigureX86
 ```
 
-## Stability
+## Versioning
 
-This is a very young project. There might be some API breaking changes in newer versions.
+The project uses [Semantic Versioning 1.0.0](https://semver.org/spec/v1.0.0.html): MAJOR_VERSION.MINOR_VERSION.MAINTENANCE_VERSION
+
+* Major Version
+  * Indicates backwards compatibility
+  * When backwards compatibility is broken, this number will be incremented
+* Minor Version
+  * Indicates a new feature
+  * When a new backwards-compatible feature is added, this number will be incremented
+* Maintenance Version
+  * Indicates a path
+  * This number will be incremented for bug fixes and other miscellaneous updates that do not introduce new functionality to the plugin
 
 ## License
 
